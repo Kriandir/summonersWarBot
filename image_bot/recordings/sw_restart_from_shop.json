@@ -1,0 +1,30 @@
+[
+    {
+        "time": 2.0207955837249756,
+        "type": "click",
+        "button": "Button.left",
+        "pos": [
+            1263,
+            875
+        ]
+    },
+    {
+        "time": 3.327669382095337,
+        "type": "click",
+        "button": "Button.left",
+        "pos": [
+            1273,
+            1198
+        ]
+    },
+
+    {
+        "time": 4.807734727859497,
+        "type": "click",
+        "button": "Button.left",
+        "pos": [
+            2114,
+            991
+        ]
+    }
+]
