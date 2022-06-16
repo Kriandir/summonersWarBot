@@ -1,4 +1,4 @@
-from playback import initializePyAutoGUI, countdownTimer,checkRunEnd,checkRefill,checkPurchase,clickImage
+from playback import initializePyAutoGUI,checkRunEnd,checkRefill,clickImage
 from textrecogniztion import getLocationsCaptcha
 from time import sleep
 import numpy as np
@@ -22,16 +22,13 @@ def soldCheck(sold):
 def main():
     
     initializePyAutoGUI()
-    countdownTimer()
+    # countdownTimer()
     # get screen sizewt
 
     # This trade loop begins by docking at Loki Station
     LOOP_REPITITIONS = 5500
     for i in range(0, LOOP_REPITITIONS):
-        repeatEnd=False
         sold = False
-        energyRefill = False
-        succesPurchase = False
         sellRunes= True
 
         repeatEnd = checkRunEnd()
@@ -72,33 +69,23 @@ def main():
 
             # catchBotException
             quiz = getLocationsCaptcha()
+            print(quiz)
             if quiz:
-                print('did we click?')
-                clickImage(['sw_ok.png'])
-                sleep(np.random.rand(1)[0] * 2.5)
-                clickImage(['sw_okcorrectguess.png'])
+
+                clickImage(['sw_ok2.png'], confidence=0.8)
             sleep(np.random.rand(1)[0] * 2.5)
             print('Are we out?')
             clickImage(['sw_yes2.png'], confidence=0.8)
             sleep(np.random.rand(1)[0] * 2.5)
 
-            clickImage(['sw_ok.png'])
+            clickImage(['sw_ok.png'],confidence=0.8)
             clickImage(['sw_ok.png'],confidence=0.8)
             sleep(np.random.rand(1)[0] * 1.5)
             clickImage(['sw_close.png'])
             sleep(np.random.rand(1)[0] * 1.5)
             clickImage(['sw_repeat.png'])
-            if quiz:
-                break
 
 
-
-
-        # Old Code
-
-        # succesPurchase = checkPurchase()
-        # if succesPurchase:
-        #     playActions("sw_restart_from_shop.json")
 
         print("sleeping for 10 sec")
         sleep(10)

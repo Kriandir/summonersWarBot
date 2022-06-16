@@ -55,7 +55,9 @@ def getRegions(image_pos):
     y += 185
     adjustx = 0
     adjusty = 0
+
     # actual try
+
     x -= 20
     y += 25
     adjustx = 15
@@ -82,7 +84,7 @@ def removeEntriesUntilTotal(numImages,matches):
             if max < i[0]:
                 max = i[0]
                 maxIndex = index
-        matches.pop(maxIndex)
+        print(matches.pop(maxIndex)[-1])
     return matches
 def cleanList(listToClean):
     indexList = []
@@ -137,13 +139,14 @@ def getLocationsCaptcha():
                     filteredMatches = removeEntriesUntilTotal(numImages, matches)
                     matchMaster +=filteredMatches
                 print('before cleaning')
+                print([i[-1] for i in matchMaster])
                 print(len(matchMaster))
                 matchMaster = cleanList(matchMaster)
                 for i in matchMaster:
                     regionDict.pop(i[-1])
                 print('after cleaning')
                 print(len(matchMaster))
-                print(matchMaster)
+                print([i[-1] for i in matchMaster])
                 print("________________________________")
                 print(regionDict)
                 for k,v in regionDict.items():
@@ -241,43 +244,6 @@ def matchOrb(k,imgLocation,directory):
 
 
 
-getLocationsCaptcha()
+# getLocationsCaptcha()
 
 
-
-
-# def matchImage(h,script_dir):
-#     script_dir = os.path.dirname(__file__)
-#     monster_dir = os.path.join(script_dir, 'needles', 'bosses', 'grey')
-#     images_to_check = (os.listdir(monster_dir))
-#
-#     # loop over images until one is found, then return the index of the found
-#     for index, image_filename in enumerate(images_to_check):
-#
-#
-#         needle_path = os.path.join(
-#             monster_dir,
-#             image_filename
-#         )
-#         image_pos = pyautogui.locateOnScreen(needle_path,region=h,grayscale=True,confidence=0.65)
-#         if image_pos:
-#             print("imageFound: {} at pos: {}".format(image_filename, image_pos))
-#             print(image_pos)
-#             center = pyautogui.center(image_pos)
-#             pyautogui.click(center.x, center.y)
-#             return True
-#         else:
-#             print("image not found")
-
-
-
-        # img = cv.imread(needle_path,0)
-        # # Initiate ORB detector
-        # orb = cv.ORB_create()
-        # # find the keypoints with ORB
-        # kp = orb.detect(img,None)
-        # # compute the descriptors with ORB
-        # kp, des = orb.compute(img, kp)
-        # # draw only keypoints location,not size and orientation
-        # img2 = cv.drawKeypoints(img, kp, None, color=(0,255,0), flags=0)
-        # cv.imwrite(needle_path[:-4]+'_gray.png',img2)
