@@ -29,24 +29,26 @@ def main():
     LOOP_REPITITIONS = 5500
     for i in range(0, LOOP_REPITITIONS):
         sold = False
-        sellRunes= True
+        sellRunes= False
 
         repeatEnd = checkRunEnd()
 
         if repeatEnd:
-            # sold = True
-            clickImage(['sw_sellsellected.png'])
-            sleep(np.random.rand(1)[0] *2)
-            for i in range(1,2):
-                clickImage(['sw_sellsellected2.png'])
-            sleep(np.random.rand(1)[0] *2)
-            sold = clickImage(['sw_yes.png'],confidence=0.85)
-            sleep(np.random.rand(1)[0]*1.5)
-            clickImage(['sw_yes.png'], confidence=0.85)
-            if not sold:
-                sold = soldCheck(sold)
-        if not sellRunes:
-            sold = True
+            if not sellRunes:
+                sold = True
+            else:
+                clickImage(['sw_sellsellected.png'])
+                sleep(np.random.rand(1)[0] *2)
+                for i in range(1,2):
+                    clickImage(['sw_sellsellected2.png'])
+                sleep(np.random.rand(1)[0] *2)
+                sold = clickImage(['sw_yes.png'],confidence=0.85)
+                sleep(np.random.rand(1)[0]*1.5)
+                clickImage(['sw_yes.png'], confidence=0.85)
+
+                if not sold:
+                    sold = soldCheck(sold)
+
 
         #TODO CATCH 6STAR
 
@@ -75,12 +77,16 @@ def main():
                 clickImage(['sw_ok2.png'], confidence=0.8)
             sleep(np.random.rand(1)[0] * 2.5)
             print('Are we out?')
+
+            # TODO this one probably not necessary pay close attention next captcha
+            clickImage(['sw_ok.png'],confidence=0.8)
+            #
+
+            sleep(np.random.rand(1)[0] * 1.5)
             clickImage(['sw_yes2.png'], confidence=0.8)
             sleep(np.random.rand(1)[0] * 2.5)
-
-            clickImage(['sw_ok.png'],confidence=0.8)
-            clickImage(['sw_ok.png'],confidence=0.8)
-            sleep(np.random.rand(1)[0] * 1.5)
+            clickImage(['sw_ok.png'], confidence=0.8)
+            sleep(np.random.rand(1)[0] * 2.5)
             clickImage(['sw_close.png'])
             sleep(np.random.rand(1)[0] * 1.5)
             clickImage(['sw_repeat.png'])

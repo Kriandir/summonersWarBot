@@ -45,7 +45,7 @@ def clickImage(images_to_check,confidence =0.9):
             print(image_pos)
             center = pyautogui.center(image_pos)
             width, height = pyautogui.size()
-            pyautogui.click(center.x, center.y)
+            pyautogui.click(np.random.normal(center.x,10), np.random.normal(center.y,10))
             sleep(np.abs(np.random.randn(1)[0]))
             return True
 

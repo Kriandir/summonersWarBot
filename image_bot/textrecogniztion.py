@@ -77,15 +77,29 @@ def getRegions(image_pos):
         y -= adjusty
     return regionDict
 
-def removeEntriesUntilTotal(numImages,matches):
-    while len(matches) > numImages :
-        max = 0
-        for index, i in enumerate(matches):
-            if max < i[0]:
-                max = i[0]
-                maxIndex = index
-        print(matches.pop(maxIndex)[-1])
+def removeEntriesUntilTotal(numImages,matches,monsters=False):
+
+    if not monsters:
+        while len(matches) > numImages :
+            max = 0
+            for index, i in enumerate(matches):
+                if max < i[0]:
+                    max = i[0]
+                    maxIndex = index
+
+            print(matches.pop(maxIndex)[-1])
+
+    else:
+        while len(matches) > numImages :
+            min = 10
+            for index, i in enumerate(matches):
+                if min > i[0]:
+                    min = i[0]
+                    minIndex = index
+
+            print(matches.pop(minIndex)[-1])
     return matches
+
 def cleanList(listToClean):
     indexList = []
     eleList=[]
@@ -96,6 +110,21 @@ def cleanList(listToClean):
             indexList.append(index)
 
     return [i for j, i in enumerate(listToClean) if j not in indexList]
+
+def createScreenshot():
+    filename='testScreenshot.png'
+    script_dir = os.path.dirname(__file__)
+
+    needle_path = os.path.join(
+        script_dir,
+        'screenshots',
+        filename
+    )
+    print(needle_path)
+    image = pyautogui.screenshot(needle_path)
+    print(image)
+
+
 def getLocationsCaptcha():
     images_to_check = [
         "sw_quiz.PNG",
@@ -114,6 +143,7 @@ def getLocationsCaptcha():
         print(needle_path)
         image_pos = pyautogui.locateOnScreen(needle_path, grayscale="False", confidence=0.7)
         if image_pos:
+            createScreenshot()
             print("imageFound: {} at pos: {}".format(image_filename, image_pos))
             print(image_pos)
 
@@ -136,17 +166,28 @@ def getLocationsCaptcha():
                     for k, v in regionDict.items():
                         matchList.append(matchOrb(k,v,i))
                     matches = list(filter(None, matchList))
-                    filteredMatches = removeEntriesUntilTotal(numImages, matches)
-                    matchMaster +=filteredMatches
+
+                    matchMaster +=matches
+
                 print('before cleaning')
                 print([i[-1] for i in matchMaster])
                 print(len(matchMaster))
                 matchMaster = cleanList(matchMaster)
-                for i in matchMaster:
-                    regionDict.pop(i[-1])
                 print('after cleaning')
                 print(len(matchMaster))
-                print([i[-1] for i in matchMaster])
+                filteredMatches = removeEntriesUntilTotal(numImages, matchMaster,True)
+                print('after filtering:')
+                print(len(filteredMatches))
+                for i in filteredMatches:
+                    # f, axarr = plt.subplots(2, 1)
+                    # axarr[0].imshow(i[1])
+                    # axarr[1].imshow(i[2])
+                    # plt.show()
+                    regionDict.pop(i[-1])
+
+
+
+                print([k for k,v in regionDict.items()])
                 print("________________________________")
                 print(regionDict)
                 for k,v in regionDict.items():
@@ -191,7 +232,7 @@ def storeLocations(regionDict,script_dir):
             f'location_{k}.png'
         )
         img = np.array(pyautogui.screenshot(needle_path2, region=k))
-        dim = (135,135)
+        dim = (130,130)
         resized = cv.resize(img, dim, interpolation=cv.INTER_AREA)
         cv.imwrite(f'{needle_path2}', resized)
         grayed = cv.imread(f'{needle_path2}', cv.IMREAD_GRAYSCALE)
@@ -231,7 +272,7 @@ def matchOrb(k,imgLocation,directory):
         # Apply ratio test
         for m, n in matches:
 
-            if m.distance < 0.49 * n.distance:
+            if m.distance < 0.51 * n.distance:
                 # img3 = cv.drawMatches(img, kp1, imgToMatch, kp2,matches, None, flags=cv.DrawMatchesFlags_NOT_DRAW_SINGLE_POINTS)
                 # good.append([m,n,img,imgToMatch,k])
                 # matched = True
@@ -244,6 +285,6 @@ def matchOrb(k,imgLocation,directory):
 
 
 
-# getLocationsCaptcha()
+getLocationsCaptcha()
 
 
