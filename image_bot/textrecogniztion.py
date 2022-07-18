@@ -57,7 +57,7 @@ def getRegions(image_pos):
     adjusty = 0
 
     # actual try
-
+    #
     x -= 20
     y += 25
     adjustx = 15
@@ -91,7 +91,7 @@ def removeEntriesUntilTotal(numImages,matches,monsters=False):
 
     else:
         while len(matches) > numImages :
-            min = 10
+            min = 1000
             for index, i in enumerate(matches):
                 if min > i[0]:
                     min = i[0]
@@ -111,8 +111,8 @@ def cleanList(listToClean):
 
     return [i for j, i in enumerate(listToClean) if j not in indexList]
 
-def createScreenshot():
-    filename='testScreenshot.png'
+def createScreenshot(screenname='testScreenShot'):
+    filename=f'{screenname}.png'
     script_dir = os.path.dirname(__file__)
 
     needle_path = os.path.join(
@@ -125,7 +125,7 @@ def createScreenshot():
     print(image)
 
 
-def getLocationsCaptcha():
+def getLocationsCaptcha(screenname='testScreenShot'):
     images_to_check = [
         "sw_quiz.PNG",
         "sw_quiz2.PNG"
@@ -143,7 +143,7 @@ def getLocationsCaptcha():
         print(needle_path)
         image_pos = pyautogui.locateOnScreen(needle_path, grayscale="False", confidence=0.7)
         if image_pos:
-            createScreenshot()
+            createScreenshot(screenname)
             print("imageFound: {} at pos: {}".format(image_filename, image_pos))
             print(image_pos)
 
@@ -204,6 +204,7 @@ def getLocationsCaptcha():
                 for k,v in regionDict.items():
                     matchList.append(matchOrb(k,v,directory))
                 matches = list(filter(None, matchList))
+                # print(len(matches))
                 filteredMatches = removeEntriesUntilTotal(numImages,matches)
 
                 for i in filteredMatches:
@@ -232,7 +233,8 @@ def storeLocations(regionDict,script_dir):
             f'location_{k}.png'
         )
         img = np.array(pyautogui.screenshot(needle_path2, region=k))
-        dim = (130,130)
+        dim = (133,133)
+        # 133 133 seems best for detecting bosses
         resized = cv.resize(img, dim, interpolation=cv.INTER_AREA)
         cv.imwrite(f'{needle_path2}', resized)
         grayed = cv.imread(f'{needle_path2}', cv.IMREAD_GRAYSCALE)

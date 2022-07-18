@@ -44,7 +44,6 @@ def clickImage(images_to_check,confidence =0.9):
             print("imageFound: {} at pos: {}".format(image_filename, image_pos))
             print(image_pos)
             center = pyautogui.center(image_pos)
-            width, height = pyautogui.size()
             pyautogui.click(np.random.normal(center.x,10), np.random.normal(center.y,10))
             sleep(np.abs(np.random.randn(1)[0]))
             return True
@@ -52,6 +51,21 @@ def clickImage(images_to_check,confidence =0.9):
     print('image not found')
     return False
 
+def findImage(images_to_check,confidence =0.9):
+    script_dir = os.path.dirname(__file__)
+    # print(__file__)
+
+    needle_path = os.path.join(
+        script_dir,
+        'needles',
+        images_to_check
+    )
+    image_pos = pyautogui.locateOnScreen(needle_path, grayscale="False", confidence=confidence)
+    if image_pos:
+        return True
+
+    # print('image not found')
+    return False
 def checkRunEnd():
     images_to_check = [
         "sw_Repeatbattleend.PNG"

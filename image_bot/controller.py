@@ -1,4 +1,4 @@
-from playback import initializePyAutoGUI,checkRunEnd,checkRefill,clickImage
+from playback import initializePyAutoGUI,checkRunEnd,checkRefill,clickImage,findImage
 from textrecogniztion import getLocationsCaptcha
 from time import sleep
 import numpy as np
@@ -29,7 +29,7 @@ def main():
     LOOP_REPITITIONS = 5500
     for i in range(0, LOOP_REPITITIONS):
         sold = False
-        sellRunes= False
+        sellRunes= True
 
         repeatEnd = checkRunEnd()
 
@@ -53,7 +53,7 @@ def main():
         #TODO CATCH 6STAR
 
         if sold:
-            for i in range(0,3):
+            for j in range(0,3):
                 sleep(np.random.rand(1)[0] *2.5)
                 clickState = clickImage(['sw_replay.png'])
                 if clickState:
@@ -70,28 +70,13 @@ def main():
             sleep(np.random.rand(1)[0] * 2.5)
 
             # catchBotException
-            quiz = getLocationsCaptcha()
-            print(quiz)
-            if quiz:
+            catchBot()
+            # completePurchase
+            completePurchaseStartRun()
 
-                clickImage(['sw_ok2.png'], confidence=0.8)
-            sleep(np.random.rand(1)[0] * 2.5)
-            print('Are we out?')
-
-            # TODO this one probably not necessary pay close attention next captcha
-            clickImage(['sw_ok.png'],confidence=0.8)
-            #
-
-            sleep(np.random.rand(1)[0] * 1.5)
-            clickImage(['sw_yes2.png'], confidence=0.8)
-            sleep(np.random.rand(1)[0] * 2.5)
-            clickImage(['sw_ok.png'], confidence=0.8)
-            sleep(np.random.rand(1)[0] * 2.5)
-            clickImage(['sw_close.png'])
-            sleep(np.random.rand(1)[0] * 1.5)
-            clickImage(['sw_repeat.png'])
-
-
+        checkPurchase = findImage('sw_purchasesuccess2.png',confidence =0.8)
+        if checkPurchase:
+            completePurchaseStartRun()
 
         print("sleeping for 10 sec")
         sleep(10)
@@ -102,8 +87,31 @@ def main():
 
 
 
+def catchBot():
+    quiz = getLocationsCaptcha('testScreenshot'+str(np.random.randint(0,10)))
+    if quiz:
+        clickImage(['sw_ok2.png'], confidence=0.8)
+        sleep(np.random.rand(1)[0] * 2.5)
+        # Verify we got out
+        for j in range(0, 2):
+            sleep(np.random.rand(1)[0] * .5)
+            imgState = findImage('sw_incorrect2.png')
+            if imgState:
+                clickImage(['sw_ok2.png'], confidence=0.8)
+                catchBot()
+                break
 
+    return True
 
-
+def completePurchaseStartRun():
+    clickImage(['sw_ok.png'], confidence=0.8)
+    sleep(np.random.rand(1)[0] * 1.5)
+    clickImage(['sw_yes2.png'], confidence=0.8)
+    sleep(np.random.rand(1)[0] * 2.5)
+    clickImage(['sw_ok.png'], confidence=0.8)
+    sleep(np.random.rand(1)[0] * 2.5)
+    clickImage(['sw_close.png'])
+    sleep(np.random.rand(1)[0] * 1.5)
+    clickImage(['sw_repeat.png'])
 if __name__ == "__main__":
     main()
